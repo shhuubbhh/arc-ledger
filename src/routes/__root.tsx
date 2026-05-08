@@ -74,14 +74,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "ArcLedger" },
+      { name: "description", content: "A Web3 ledger app for merchants to track customer credit and for customers to repay using USDC on Circle Arc L1." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "ArcLedger" },
+      { property: "og:description", content: "A Web3 ledger app for merchants to track customer credit and for customers to repay using USDC on Circle Arc L1." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "ArcLedger" },
+      { name: "twitter:description", content: "A Web3 ledger app for merchants to track customer credit and for customers to repay using USDC on Circle Arc L1." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a7d0173-0c1e-453e-a449-ffe18da18171/id-preview-a0c4171d--9c83a098-988f-4607-a486-b27bca36f991.lovable.app-1778261368445.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a7d0173-0c1e-453e-a449-ffe18da18171/id-preview-a0c4171d--9c83a098-988f-4607-a486-b27bca36f991.lovable.app-1778261368445.png" },
     ],
     links: [
       {
