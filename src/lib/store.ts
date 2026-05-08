@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 export type Role = "merchant" | "customer";
 export type TxType = "borrow" | "repayment";
@@ -161,7 +161,19 @@ export const useStore = create<State>()(
           ),
         }),
     }),
-    { name: "arckhata-store-v1" },
+    {
+      name: "arckhata-store-v1",
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined"
+          ? window.localStorage
+          : {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            },
+      ),
+      skipHydration: true,
+    },
   ),
 );
 
