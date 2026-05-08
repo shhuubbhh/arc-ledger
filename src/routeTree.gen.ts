@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MerchantRouteImport } from './routes/merchant'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CustomerRouteImport } from './routes/customer'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MerchantCustomerIdRouteImport } from './routes/merchant.customer.$id'
 
@@ -22,6 +23,11 @@ const MerchantRoute = MerchantRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomerRoute = CustomerRouteImport.update({
+  id: '/customer',
+  path: '/customer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const MerchantCustomerIdRoute = MerchantCustomerIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
@@ -50,20 +58,33 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/merchant' | '/merchant/customer/$id'
+  fullPaths:
+    | '/'
+    | '/customer'
+    | '/login'
+    | '/merchant'
+    | '/merchant/customer/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/merchant' | '/merchant/customer/$id'
-  id: '__root__' | '/' | '/login' | '/merchant' | '/merchant/customer/$id'
+  to: '/' | '/customer' | '/login' | '/merchant' | '/merchant/customer/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/customer'
+    | '/login'
+    | '/merchant'
+    | '/merchant/customer/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CustomerRoute: typeof CustomerRoute
   LoginRoute: typeof LoginRoute
   MerchantRoute: typeof MerchantRouteWithChildren
 }
@@ -82,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customer': {
+      id: '/customer'
+      path: '/customer'
+      fullPath: '/customer'
+      preLoaderRoute: typeof CustomerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -115,6 +143,7 @@ const MerchantRouteWithChildren = MerchantRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CustomerRoute: CustomerRoute,
   LoginRoute: LoginRoute,
   MerchantRoute: MerchantRouteWithChildren,
 }
