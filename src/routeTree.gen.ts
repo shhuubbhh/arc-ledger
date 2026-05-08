@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PayRouteImport } from './routes/pay'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MerchantRouteImport } from './routes/merchant'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CustomerRouteImport } from './routes/customer'
@@ -19,6 +20,11 @@ import { Route as MerchantCustomerIdRouteImport } from './routes/merchant.custom
 const PayRoute = PayRouteImport.update({
   id: '/pay',
   path: '/pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MerchantRoute = MerchantRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/pay': typeof PayRoute
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/pay': typeof PayRoute
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/customer': typeof CustomerRoute
   '/login': typeof LoginRoute
   '/merchant': typeof MerchantRouteWithChildren
+  '/notifications': typeof NotificationsRoute
   '/pay': typeof PayRoute
   '/merchant/customer/$id': typeof MerchantCustomerIdRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/customer'
     | '/login'
     | '/merchant'
+    | '/notifications'
     | '/pay'
     | '/merchant/customer/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/customer'
     | '/login'
     | '/merchant'
+    | '/notifications'
     | '/pay'
     | '/merchant/customer/$id'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/customer'
     | '/login'
     | '/merchant'
+    | '/notifications'
     | '/pay'
     | '/merchant/customer/$id'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   CustomerRoute: typeof CustomerRoute
   LoginRoute: typeof LoginRoute
   MerchantRoute: typeof MerchantRouteWithChildren
+  NotificationsRoute: typeof NotificationsRoute
   PayRoute: typeof PayRoute
 }
 
@@ -114,6 +127,13 @@ declare module '@tanstack/react-router' {
       path: '/pay'
       fullPath: '/pay'
       preLoaderRoute: typeof PayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/merchant': {
@@ -171,6 +191,7 @@ const rootRouteChildren: RootRouteChildren = {
   CustomerRoute: CustomerRoute,
   LoginRoute: LoginRoute,
   MerchantRoute: MerchantRouteWithChildren,
+  NotificationsRoute: NotificationsRoute,
   PayRoute: PayRoute,
 }
 export const routeTree = rootRouteImport
