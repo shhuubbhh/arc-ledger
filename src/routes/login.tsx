@@ -4,25 +4,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { useStore } from "@/lib/store";
-import { useState } from "react";
+import { usePrivy } from "@/lib/privy";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Wallet, Store, User } from "lucide-react";
+import { Wallet, Store, User, Mail, Phone, Chrome } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Connect Wallet — ArcLedger" }] }),
+  head: () => ({ meta: [{ title: "Sign in — ArcLedger" }] }),
   component: LoginPage,
 });
 
 function LoginPage() {
-  const login = useStore((s) => s.login);
+  const loginMerchantWithPrivy = useStore((s) => s.loginMerchantWithPrivy);
   const loginAsCustomerWallet = useStore((s) => s.loginAsCustomerWallet);
+  const sessionUser = useStore((s) => s.user);
+  const privy = usePrivy();
   const navigate = useNavigate();
   const [walletInput, setWalletInput] = useState("");
   const [shopName, setShopName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const connectMerchant = (provider: string) => {
-    login("merchant", shopName || "My Shop");
-    toast.success(`Connected via ${provider}`, { description: "Welcome to your merchant dashboard." });
+  // Auto-resume: if Privy session is already persisted, finish merchant login.
+  useEffect(() => {
+    if (!privy.ready || !privy.user || sessionUser) return;
+    const profile = shopName.trim() ? { ...privy.user, displayName: shopName.trim() } : privy.user;
+    const { merchant, created } = loginMerchantWithPrivy(profile);
+    toast.success(created ? "Merchant account created" : `Welcome back, ${merchant.businessName}`);
+    navigate({ to: "/merchant" });
+  }, [privy.ready, privy.user, sessionUser, shopName, loginMerchantWithPrivy, navigate]);
+
+  const signIn = (method: "email" | "google" | "phone" | "wallet", identifier?: string) => {
+    const profile = privy.login({ method, identifier });
+    const finalProfile = shopName.trim() ? { ...profile, displayName: shopName.trim() } : profile;
+    const { merchant, created } = loginMerchantWithPrivy(finalProfile);
+    toast.success(
+      created ? `Welcome to ArcLedger, ${merchant.businessName}` : `Welcome back, ${merchant.businessName}`,
+      { description: `Wallet ${merchant.walletAddress.slice(0, 10)}…` },
+    );
     navigate({ to: "/merchant" });
   };
 
@@ -50,23 +69,48 @@ function LoginPage() {
               <Store className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">I'm a merchant</h2>
-              <p className="text-xs text-muted-foreground">Manage customer ledgers</p>
+              <h2 className="text-lg font-semibold">Sign in with Privy</h2>
+              <p className="text-xs text-muted-foreground">Same login = same wallet & ledger, always</p>
             </div>
           </div>
           <div className="mt-6 space-y-3">
             <div className="space-y-1.5">
-              <Label htmlFor="shop">Shop name (optional)</Label>
+              <Label htmlFor="shop">Business name (only on first sign-in)</Label>
               <Input id="shop" placeholder="e.g. Sharma General Store" value={shopName} onChange={(e) => setShopName(e.target.value)} />
             </div>
-            <Button onClick={() => connectMerchant("Privy Embedded")} className="w-full shadow-elegant" style={{ background: "var(--gradient-primary)" }}>
-              <Wallet className="mr-2 h-4 w-4" /> Continue with Embedded Wallet
-            </Button>
-            <div className="grid grid-cols-3 gap-2">
-              <Button variant="outline" size="sm" onClick={() => connectMerchant("MetaMask")}>MetaMask</Button>
-              <Button variant="outline" size="sm" onClick={() => connectMerchant("WalletConnect")}>WalletConnect</Button>
-              <Button variant="outline" size="sm" onClick={() => connectMerchant("Coinbase")}>Coinbase</Button>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <div className="flex gap-2">
+                <Input id="email" type="email" placeholder="you@shop.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <Button onClick={() => signIn("email", email || undefined)} style={{ background: "var(--gradient-primary)" }}>
+                  <Mail className="mr-1 h-4 w-4" /> Continue
+                </Button>
+              </div>
             </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="phone">Phone</Label>
+              <div className="flex gap-2">
+                <Input id="phone" type="tel" placeholder="+1 555 123 4567" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <Button variant="outline" onClick={() => signIn("phone", phone || undefined)}>
+                  <Phone className="mr-1 h-4 w-4" /> Send code
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Button variant="outline" onClick={() => signIn("google")}>
+                <Chrome className="mr-1 h-4 w-4" /> Google
+              </Button>
+              <Button variant="outline" onClick={() => signIn("wallet")}>
+                <Wallet className="mr-1 h-4 w-4" /> External wallet
+              </Button>
+            </div>
+
+            <p className="pt-2 text-[11px] text-muted-foreground">
+              An embedded USDC wallet on Arc L1 is created the first time you sign in and reused on every future login.
+            </p>
           </div>
         </Card>
 
