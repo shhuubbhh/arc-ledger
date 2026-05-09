@@ -9,7 +9,7 @@ import { CheckCircle2, Loader2, Wallet, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/pay")({
-  head: () => ({ meta: [{ title: "Pay USDC — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "Pay USDC — ArcLedger" }] }),
   component: PayPage,
 });
 
