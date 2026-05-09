@@ -11,7 +11,7 @@ import { Plus, Search, TrendingUp, Users, Wallet, ArrowUpRight, Trash2 } from "l
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/merchant")({
-  head: () => ({ meta: [{ title: "Merchant Dashboard — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "Merchant Dashboard — ArcLedger" }] }),
   component: MerchantPage,
 });
 
