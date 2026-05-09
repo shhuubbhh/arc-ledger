@@ -1,5 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useStore, shortAddr } from "@/lib/store";
+import { usePrivy } from "@/lib/privy";
 import { Button } from "@/components/ui/button";
 import { Bell, LogOut, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 export function AppHeader() {
   const user = useStore((s) => s.user);
   const logout = useStore((s) => s.logout);
+  const privy = usePrivy();
   const allNotifications = useStore((s) => s.notifications);
   const notifications = user ? allNotifications.filter((n) => n.userId === user.id && !n.read) : [];
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ export function AppHeader() {
                 <span className="font-mono text-xs">{shortAddr(user.walletAddress)}</span>
                 <Badge variant="secondary" className="text-[10px]">{user.role}</Badge>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => { logout(); navigate({ to: "/" }); }}>
+              <Button variant="ghost" size="icon" onClick={() => { logout(); privy.logout(); navigate({ to: "/" }); }}>
                 <LogOut className="h-4 w-4" />
               </Button>
             </>
