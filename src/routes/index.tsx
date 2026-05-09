@@ -7,10 +7,10 @@ import heroImg from "@/assets/hero-usdc.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ArcKhata — Web3 Khata for USDC on Circle Arc L1" },
+      { title: "ArcLedger — Web3 Ledger for USDC on Circle Arc L1" },
       { name: "description", content: "A modern crypto ledger for merchants and customers. Track borrowings, send reminders, and settle dues in USDC on Circle Arc L1." },
-      { property: "og:title", content: "ArcKhata — USDC Khata on Arc L1" },
-      { property: "og:description", content: "Crypto-native KhataBook. USDC payments. Arc L1 settlement." },
+      { property: "og:title", content: "ArcLedger — USDC Ledger on Arc L1" },
+      { property: "og:description", content: "Crypto-native LedgerBook. USDC payments. Arc L1 settlement." },
     ],
   }),
   component: Index,
@@ -31,7 +31,7 @@ function Index() {
               Powered by USDC on Circle Arc L1
             </div>
             <h1 className="text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              The crypto-native <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-primary)" }}>Khata</span> for modern merchants.
+              The crypto-native <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-primary)" }}>Ledger</span> for modern merchants.
             </h1>
             <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
               Track customer borrowings, send reminders, and settle dues in USDC — all on Circle's Arc L1. Built for merchants and the customers who pay them.
@@ -71,7 +71,7 @@ function Index() {
       <section className="border-t border-border bg-card/40">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Everything a modern Khata needs</h2>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Everything a modern Ledger needs</h2>
             <p className="mt-3 text-muted-foreground">Familiar ledger workflow. On-chain settlement. Zero spreadsheet chaos.</p>
           </div>
 
@@ -79,7 +79,7 @@ function Index() {
             <Feature icon={<Users className="h-5 w-5" />} title="Customer ledgers" desc="Track borrowings and repayments per customer with a clean transaction history." />
             <Feature icon={<Wallet className="h-5 w-5" />} title="USDC payments" desc="Customers settle dues from any wallet. Funds land in your wallet instantly." />
             <Feature icon={<Zap className="h-5 w-5" />} title="Arc L1 speed" desc="Sub-second confirmations and near-zero fees on Circle's stablecoin chain." />
-            <Feature icon={<BookOpen className="h-5 w-5" />} title="KhataBook simplicity" desc="A workflow your customers already understand — borrow, owe, repay." />
+            <Feature icon={<BookOpen className="h-5 w-5" />} title="LedgerBook simplicity" desc="A workflow your customers already understand — borrow, owe, repay." />
             <Feature icon={<ShieldCheck className="h-5 w-5" />} title="Wallet auth" desc="Sign-in with embedded or external wallets. No passwords, no leaks." />
             <Feature icon={<Sparkles className="h-5 w-5" />} title="Real-time alerts" desc="Both sides get notified the moment a borrow or repayment is recorded." />
           </div>
@@ -91,7 +91,7 @@ function Index() {
         <div className="absolute inset-0 -z-10 opacity-90" style={{ background: "var(--gradient-hero)" }} />
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl">Stop chasing payments. Start settling them.</h2>
-          <p className="max-w-xl text-primary-foreground/80">Open ArcKhata in seconds. Add your first customer. Get paid in USDC.</p>
+          <p className="max-w-xl text-primary-foreground/80">Open ArcLedger in seconds. Add your first customer. Get paid in USDC.</p>
           <Button asChild size="lg" variant="secondary" className="shadow-elegant">
             <Link to="/login">Launch the app <ArrowRight className="ml-1 h-4 w-4" /></Link>
           </Button>
@@ -100,7 +100,7 @@ function Index() {
 
       <footer className="border-t border-border bg-background">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6">
-          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} ArcKhata. Built on Circle Arc L1.</p>
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} ArcLedger. Built on Circle Arc L1.</p>
           <p className="text-xs text-muted-foreground">USDC • Arc L1 • Web3</p>
         </div>
       </footer>
