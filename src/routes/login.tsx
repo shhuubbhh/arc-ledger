@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Wallet, Store, User } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Connect Wallet — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "Connect Wallet — ArcLedger" }] }),
   component: LoginPage,
 });
 
@@ -93,7 +93,7 @@ function LoginPage() {
         </Card>
       </div>
       <p className="pb-10 text-center text-xs text-muted-foreground">
-        New here? <Link to="/" className="text-primary underline-offset-4 hover:underline">Read about ArcKhata</Link>
+        New here? <Link to="/" className="text-primary underline-offset-4 hover:underline">Read about ArcLedger</Link>
       </p>
     </div>
   );
