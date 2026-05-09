@@ -42,12 +42,31 @@ export interface SessionUser {
   displayName?: string;
 }
 
+export interface Merchant {
+  id: string;
+  privyUserId: string;
+  walletAddress: string;
+  email?: string;
+  businessName: string;
+  createdAt: number;
+}
+
+export interface PrivyProfile {
+  privyUserId: string;
+  method: "email" | "google" | "phone" | "wallet";
+  email?: string;
+  phone?: string;
+  displayName?: string;
+  walletAddress: string;
+}
+
 interface State {
   user: SessionUser | null;
+  merchants: Merchant[];
   customers: Customer[];
   transactions: Transaction[];
   notifications: Notification[];
-  login: (role: Role, displayName?: string) => SessionUser;
+  loginMerchantWithPrivy: (profile: PrivyProfile) => { user: SessionUser; merchant: Merchant; created: boolean };
   loginAsCustomerWallet: (walletAddress: string) => SessionUser | null;
   logout: () => void;
   addCustomer: (input: Omit<Customer, "id" | "createdAt" | "merchantId">) => Customer;
@@ -74,18 +93,38 @@ export const useStore = create<State>()(
   persist(
     (set, get) => ({
       user: null,
+      merchants: [],
       customers: [],
       transactions: [],
       notifications: [],
-      login: (role, displayName) => {
+      loginMerchantWithPrivy: (profile) => {
+        const existing = get().merchants.find((m) => m.privyUserId === profile.privyUserId);
+        let merchant: Merchant;
+        let created = false;
+        if (existing) {
+          // Reuse the same wallet & merchant_id forever.
+          merchant = existing;
+        } else {
+          merchant = {
+            id: rid(),
+            privyUserId: profile.privyUserId,
+            walletAddress: profile.walletAddress,
+            email: profile.email,
+            businessName: profile.displayName || profile.email?.split("@")[0] || "My Shop",
+            createdAt: Date.now(),
+          };
+          created = true;
+          set({ merchants: [merchant, ...get().merchants] });
+        }
         const user: SessionUser = {
-          id: rid(),
-          role,
-          walletAddress: fakeWallet(),
-          displayName: displayName || (role === "merchant" ? "My Shop" : "Wallet User"),
+          id: merchant.id,
+          role: "merchant",
+          walletAddress: merchant.walletAddress,
+          email: merchant.email,
+          displayName: merchant.businessName,
         };
         set({ user });
-        return user;
+        return { user, merchant, created };
       },
       loginAsCustomerWallet: (walletAddress) => {
         const customer = get().customers.find(
@@ -162,15 +201,9 @@ export const useStore = create<State>()(
         }),
     }),
     {
-      name: "arckhata-store-v1",
+      name: "arckhata-store-v2",
       storage: createJSONStorage(() =>
-        typeof window !== "undefined"
-          ? window.localStorage
-          : {
-              getItem: () => null,
-              setItem: () => {},
-              removeItem: () => {},
-            },
+        typeof window !== "undefined" ? window.localStorage : (undefined as any),
       ),
       skipHydration: true,
     },
