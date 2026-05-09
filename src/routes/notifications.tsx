@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 
 export const Route = createFileRoute("/notifications")({
-  head: () => ({ meta: [{ title: "Activity — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "Activity — ArcLedger" }] }),
   component: NotificationsPage,
 });
 
