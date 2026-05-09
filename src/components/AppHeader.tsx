@@ -20,7 +20,7 @@ export function AppHeader() {
             <span className="text-base font-bold text-primary-foreground">A</span>
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold tracking-tight">ArcKhata</span>
+            <span className="text-sm font-semibold tracking-tight">ArcLedger</span>
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground">USDC · Arc L1</span>
           </div>
         </Link>
