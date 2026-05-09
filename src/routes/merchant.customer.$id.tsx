@@ -11,7 +11,7 @@ import { ArrowLeft, Bell, Download, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/merchant/customer/$id")({
-  head: () => ({ meta: [{ title: "Customer Ledger — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "Customer Ledger — ArcLedger" }] }),
   component: CustomerLedger,
 });
 
