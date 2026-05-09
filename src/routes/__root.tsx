@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { useStore } from "@/lib/store";
+import { PrivyProvider } from "@/lib/privy";
 
 function NotFoundComponent() {
   return (
@@ -125,13 +126,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <AppHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-      </div>
-      <Toaster richColors position="top-right" />
+      <PrivyProvider>
+        <div className="flex min-h-screen flex-col">
+          <AppHeader />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
+        <Toaster richColors position="top-right" />
+      </PrivyProvider>
     </QueryClientProvider>
   );
 }
