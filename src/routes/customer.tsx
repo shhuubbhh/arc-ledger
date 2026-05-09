@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Wallet, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/customer")({
-  head: () => ({ meta: [{ title: "My Ledger — ArcKhata" }] }),
+  head: () => ({ meta: [{ title: "My Ledger — ArcLedger" }] }),
   component: CustomerPage,
 });
 
