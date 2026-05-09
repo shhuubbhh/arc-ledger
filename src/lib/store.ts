@@ -69,7 +69,7 @@ interface State {
   loginMerchantWithPrivy: (profile: PrivyProfile) => { user: SessionUser; merchant: Merchant; created: boolean };
   loginAsCustomerWallet: (walletAddress: string) => SessionUser | null;
   logout: () => void;
-  addCustomer: (input: Omit<Customer, "id" | "createdAt" | "merchantId">) => Customer;
+  addCustomer: (input: Omit<Customer, "id" | "createdAt" | "merchantId"> & { initialDue?: number }) => Customer;
   updateCustomer: (id: string, patch: Partial<Customer>) => void;
   deleteCustomer: (id: string) => void;
   addTransaction: (input: Omit<Transaction, "id" | "timestamp" | "merchantId" | "status"> & { status?: TxStatus }) => Transaction;
@@ -144,14 +144,25 @@ export const useStore = create<State>()(
       addCustomer: (input) => {
         const user = get().user;
         if (!user || user.role !== "merchant") throw new Error("Not a merchant");
+        const { initialDue, ...customerInput } = input;
         const customer: Customer = {
           id: rid(),
           merchantId: user.id,
           createdAt: Date.now(),
-          ...input,
-          walletAddress: input.walletAddress || fakeWallet(),
+          ...customerInput,
+          walletAddress: customerInput.walletAddress || fakeWallet(),
         };
         set({ customers: [customer, ...get().customers] });
+        
+        if (initialDue && initialDue > 0) {
+          get().addTransaction({
+            customerId: customer.id,
+            amount: initialDue,
+            type: "borrow",
+            notes: "Initial balance",
+          });
+        }
+
         get().pushNotification(user.id, `Customer ${customer.name} added`);
         return customer;
       },

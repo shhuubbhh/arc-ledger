@@ -28,21 +28,21 @@ function LoginPage() {
   // Auto-resume: if Privy session is already persisted, finish merchant login.
   useEffect(() => {
     if (!privy.ready || !privy.user || sessionUser) return;
+    
     const profile = shopName.trim() ? { ...privy.user, displayName: shopName.trim() } : privy.user;
     const { merchant, created } = loginMerchantWithPrivy(profile);
-    toast.success(created ? "Merchant account created" : `Welcome back, ${merchant.businessName}`);
+    if (created) {
+      toast.success(`Welcome to ArcLedger, ${merchant.businessName}`, {
+        description: `Wallet ${merchant.walletAddress.slice(0, 10)}…`,
+      });
+    } else {
+      toast.success(`Welcome back, ${merchant.businessName}`);
+    }
     navigate({ to: "/merchant" });
-  }, [privy.ready, privy.user, sessionUser, shopName, loginMerchantWithPrivy, navigate]);
+  }, [privy.ready, privy.user, sessionUser, loginMerchantWithPrivy, navigate]);
 
-  const signIn = (method: "email" | "google" | "phone" | "wallet", identifier?: string) => {
-    const profile = privy.login({ method, identifier });
-    const finalProfile = shopName.trim() ? { ...profile, displayName: shopName.trim() } : profile;
-    const { merchant, created } = loginMerchantWithPrivy(finalProfile);
-    toast.success(
-      created ? `Welcome to ArcLedger, ${merchant.businessName}` : `Welcome back, ${merchant.businessName}`,
-      { description: `Wallet ${merchant.walletAddress.slice(0, 10)}…` },
-    );
-    navigate({ to: "/merchant" });
+  const handleLogin = () => {
+    privy.login();
   };
 
   const connectCustomer = () => {
@@ -69,43 +69,35 @@ function LoginPage() {
               <Store className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Sign in with Privy</h2>
-              <p className="text-xs text-muted-foreground">Same login = same wallet & ledger, always</p>
+              <h2 className="text-lg font-semibold">Merchant Portal</h2>
+              <p className="text-xs text-muted-foreground">Manage your business ledger securely</p>
             </div>
           </div>
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="shop">Business name (only on first sign-in)</Label>
+              <Label htmlFor="shop">Business name (optional)</Label>
               <Input id="shop" placeholder="e.g. Sharma General Store" value={shopName} onChange={(e) => setShopName(e.target.value)} />
+              <p className="text-[10px] text-muted-foreground">This will be shown to your customers.</p>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <div className="flex gap-2">
-                <Input id="email" type="email" placeholder="you@shop.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <Button onClick={() => signIn("email", email || undefined)} style={{ background: "var(--gradient-primary)" }}>
-                  <Mail className="mr-1 h-4 w-4" /> Continue
-                </Button>
+            <Button 
+              onClick={handleLogin} 
+              className="w-full py-6 text-base font-semibold shadow-elegant transition-all hover:scale-[1.02] active:scale-[0.98]" 
+              style={{ background: "var(--gradient-primary)" }}
+            >
+              <Store className="mr-2 h-5 w-5" />
+              Sign in with Privy
+            </Button>
+
+            <div className="space-y-2 pt-2">
+              <p className="text-center text-[11px] text-muted-foreground">
+                Secure login with Email, Google, or your favorite Wallet (MetaMask, Rabby, etc.)
+              </p>
+              <div className="flex justify-center gap-4 text-muted-foreground/40">
+                <Mail className="h-4 w-4" />
+                <Chrome className="h-4 w-4" />
+                <Wallet className="h-4 w-4" />
               </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="phone">Phone</Label>
-              <div className="flex gap-2">
-                <Input id="phone" type="tel" placeholder="+1 555 123 4567" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                <Button variant="outline" onClick={() => signIn("phone", phone || undefined)}>
-                  <Phone className="mr-1 h-4 w-4" /> Send code
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <Button variant="outline" onClick={() => signIn("google")}>
-                <Chrome className="mr-1 h-4 w-4" /> Google
-              </Button>
-              <Button variant="outline" onClick={() => signIn("wallet")}>
-                <Wallet className="mr-1 h-4 w-4" /> External wallet
-              </Button>
             </div>
 
             <p className="pt-2 text-[11px] text-muted-foreground">
@@ -113,6 +105,7 @@ function LoginPage() {
             </p>
           </div>
         </Card>
+
 
         <Card className="p-6 shadow-elegant">
           <div className="flex items-center gap-3">

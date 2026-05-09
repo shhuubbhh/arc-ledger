@@ -27,6 +27,7 @@ function MerchantPage() {
   const [name, setName] = useState("");
   const [wallet, setWallet] = useState("");
   const [phone, setPhone] = useState("");
+  const [due, setDue] = useState("");
 
   useEffect(() => {
     if (!user) navigate({ to: "/login" });
@@ -64,9 +65,18 @@ function MerchantPage() {
 
   const submit = () => {
     if (!name.trim()) return toast.error("Customer name is required");
-    addCustomer({ name: name.trim(), walletAddress: wallet.trim(), phone: phone.trim() || undefined });
+    addCustomer({
+      name: name.trim(),
+      walletAddress: wallet.trim(),
+      phone: phone.trim() || undefined,
+      initialDue: due ? Number(due) : undefined,
+    });
     toast.success(`${name} added to your ledger`);
-    setName(""); setWallet(""); setPhone(""); setOpen(false);
+    setName("");
+    setWallet("");
+    setPhone("");
+    setDue("");
+    setOpen(false);
   };
 
   if (!user) return null;
@@ -100,6 +110,10 @@ function MerchantPage() {
               <div className="space-y-1.5">
                 <Label htmlFor="cphone">Phone (optional)</Label>
                 <Input id="cphone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="cdue">Initial due amount (optional)</Label>
+                <Input id="cdue" type="number" min="0" step="0.01" value={due} onChange={(e) => setDue(e.target.value)} placeholder="0.00" className="font-mono" />
               </div>
             </div>
             <DialogFooter>
